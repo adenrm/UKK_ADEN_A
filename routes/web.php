@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\admin\BillController;
+use App\Http\Controllers\admin\SPPController;
+use App\Http\Controllers\user\SPPController as StudentSPPController;
+use App\Http\Controllers\admin\StaffController;
+use App\Http\Controllers\admin\StudentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\user\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +18,57 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/bill', [SppController::class, 'billStudent'])->name('student.bill');
+    Route::get('/payment', [PaymentController::class, 'riwayatStudent'])->name('student.payment');
+    Route::post('/payment', [PaymentController::class, 'storeStudent'])->name('student.payment.store');
+
+    Route::get('/student/bill', [StudentSPPController::class, 'bill'])->name('student.bill');
+    Route::post('/spp/generate-bill', [StudentSPPController::class, 'generatebill'])->name('spp.generate');
+
+    Route::get('/payment/{studentSppId}/create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment/{studentSppId}', [PaymentController::class, 'store'])->name('payment.store');
+    Route::get('/payment/{studentSppId}/riwayat', [PaymentController::class, 'riwayat'])->name('payment.riwayat');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/management', [DashboardController::class, 'management'])->name('admin.management');
+
+
+        Route::get('/management/student', [StudentController::class, 'index'])->name('admin.student.index');
+        Route::get('/management/student/create', [StudentController::class, 'create'])->name('admin.student.create');
+        Route::post('/management/student', [StudentController::class, 'store'])->name('admin.student.store');
+        Route::get('/management/student/{user}/edit', [StudentController::class, 'edit'])->name('admin.student.edit');
+        Route::put('/management/student/{user}', [StudentController::class, 'update'])->name('admin.student.update');
+        Route::delete('/management/student/{user}', [StudentController::class, 'destroy'])->name('admin.student.destroy');
+
+        Route::get('/management/staff', [StaffController::class, 'index'])->name('admin.staff.index');
+        Route::get('/management/staff/create', [StaffController::class, 'create'])->name('admin.staff.create');
+        Route::post('/management/staff', [StaffController::class, 'store'])->name('admin.staff.store');
+        Route::get('/management/staff/{user}/edit', [StaffController::class, 'edit'])->name('admin.staff.edit');
+        Route::put('/management/staff/{user}', [StaffController::class, 'update'])->name('admin.staff.update');
+        Route::delete('/management/staff/{user}', [StaffController::class, 'destroy'])->name('admin.staff.destroy');
+
+        Route::get('/management/spp', [SPPController::class, 'index'])->name('admin.spp.index');
+        Route::get('/management/spp/create', [SPPController::class, 'create'])->name('admin.spp.create');
+        Route::post('/management/spp', [SPPController::class, 'store'])->name('admin.spp.store');
+        Route::get('/management/spp/{spp}/edit', [SPPController::class, 'edit'])->name('admin.spp.edit');
+        Route::put('/management/spp/{spp}', [SPPController::class, 'update'])->name('admin.spp.update');
+        Route::delete('/management/spp/{spp}', [SPPController::class, 'destroy'])->name('admin.spp.destroy');
+        Route::patch('/management/spp/{spp}/update-status', [SPPController::class, 'updateStatus'])->name('admin.spp.updateStatus');
+
+         // bill
+        Route::get('/bill', [BillController::class, 'index'])->name('admin.bill.index');
+        Route::get('/bill/{siswaId}', [BillController::class, 'detail'])->name('admin.bill.detail');
+        Route::post('/bill/generate', [BillController::class, 'generateBill'])->name('admin.bill.generate');
+        Route::post('/bill/generate-massal', [BillController::class, 'generateMassal'])->name('admin.bill.generate.massal');
+        Route::get('/bill/register', [BillController::class, 'register'])->name('admin.bill.register');
+        Route::get('/bill/generate/index', [BillController::class, 'generate'])->name('admin.bill.generate.index');
+
+        Route::post('/bill/register/spp', [BillController::class, 'registerSpp'])->name('admin.bill.register.spp');
+        
+        // payment
+        Route::get('/payment/create/{studentSppId}', [PaymentController::class, 'create'])->name('admin.payment.create');
+        Route::post('/payment/bulan', [PaymentController::class, 'bayarPerBulan'])->name('admin.payment.bulan');
+    });
 });
