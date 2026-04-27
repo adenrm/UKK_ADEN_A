@@ -92,4 +92,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(StudentSpp::class, 'user_id', 'id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id', 'id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'user_id', 'id');
+    }
 }

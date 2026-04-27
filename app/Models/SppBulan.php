@@ -9,7 +9,7 @@ class SppBulan extends Model
     protected $table = 'spp_bulan';
     
     protected $fillable = [
-        'siswa_spp_id',
+        'student_spp_id',
         'bulan',
         'tahun',
         'nominal',

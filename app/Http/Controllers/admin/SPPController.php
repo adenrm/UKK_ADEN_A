@@ -30,7 +30,7 @@ class SPPController extends Controller
         $spp->nominal_per_bulan = $request->nominal_per_bulan;
         $spp->tahun_ajaran = $request->tahun_ajaran;
         $spp->total_bulan = 12;
-        $spp->total_nominal_bulan = $request->nominal_per_bulan * 12;
+        // $spp->total_nominal_tahun = $request->nominal_per_bulan * 12;
         $spp->is_active = true;
         $spp->save();
         return redirect()->route('admin.spp.index')->with('success', 'SPP berhasil di tambahkan!');

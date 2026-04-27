@@ -15,6 +15,16 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if (Auth::user()->level === 'admin')
+                        <x-nav-link href="{{ route('admin.management') }}" :active="request()->routeIs('admin.management')">
+                        {{ __('Manajemen') }}
+                    </x-nav-link>
+
+                        <x-nav-link href="{{ route('admin.ticket.index') }}" :active="request()->routeIs('admin.ticket.index')">
+                        {{ __('Tiket') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 

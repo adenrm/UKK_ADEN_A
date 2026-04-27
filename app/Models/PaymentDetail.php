@@ -8,4 +8,9 @@ class PaymentDetail extends Model
 {
     protected $table = 'payment_details';
     
+    protected $fillable = [
+        'payment_id',
+        'spp_bulan_id',
+        'nominal_dibayar',
+    ];
 }
