@@ -31,6 +31,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'level',
     ];
 
     /**
@@ -65,5 +66,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function Admin()
+    {
+        return $this->level === 'admin';
+    }
+
+    public function Staff()
+    {
+        return $this->level === 'staff';
+    }
+
+    public function Student()
+    {
+        return $this->level === 'student';
+    }
+
+    public function UserData()
+    {
+        return $this->hasOne(UserData::class, 'user_id', 'id');
+    }
+
+    public function studentSpp()
+    {
+        return $this->hasOne(StudentSpp::class, 'user_id', 'id');
     }
 }
