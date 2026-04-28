@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminOnly;
+use App\Http\Middleware\CreatorOnly;
 use App\Http\Middleware\StaffOnly;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
           $middleware->alias([
             'admin' => AdminOnly::class,
             'staff' => StaffOnly::class,
+            'creator' => CreatorOnly::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

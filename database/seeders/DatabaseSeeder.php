@@ -82,6 +82,20 @@ class DatabaseSeeder extends Seeder
                 'level' => 'admin',
             ]);
 
+             User::create([
+                'name' => 'Dudun',
+                'email' => 'dudun@gmail.com',
+                'password' => bcrypt('password'),
+                'level' => 'staff',
+            ]);
+
+             User::create([
+                'name' => 'Didin',
+                'email' => 'didin@gmail.com',
+                'password' => bcrypt('password'),
+                'level' => 'student',
+            ]);
+
              $this->generateTagihan($siswaSpp->id, $spp->nominal_per_bulan);
     }
     

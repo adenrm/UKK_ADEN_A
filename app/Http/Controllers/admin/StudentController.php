@@ -90,7 +90,7 @@ class StudentController extends Controller
         'nis' => 'required|integer|unique:user_data,nis,' . ($userData->id ?? 'NULL'),
         'class_id' => 'required|exists:classes,id',
         'rayon' => 'required',
-        'phone' => 'required|integer',
+        'phone' => 'required|regex:/^[0-9]+$/',
         'program' => 'required|in:unggulan,reguler',
     ], [
         'nisn.unique' => 'NISN sudah terdaftar! Silakan gunakan NISN yang berbeda.',

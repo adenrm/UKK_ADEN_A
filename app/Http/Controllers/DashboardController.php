@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\SppBulan;
 use App\Models\StudentSpp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class DashboardController extends Controller
 {
@@ -22,15 +24,19 @@ class DashboardController extends Controller
         } elseif(Auth::user()->level === 'staff') {
             return view('staff.dashboard.index');
         } else {
-            return view('student.dashboard.index');
+            $payments = Payment::where('user_id', Auth::user()->id)->get();
+            return view('student.dashboard.index', compact('payments'));
         }
     }
 
     public function management()
     {
-        // if(Auth::user()->level === 'admin') {
             return view('admin.management.index');
-        // }
-        // abort(403, 'Not Allowed');
+    }
+
+    public function log()
+    {
+        $log = Activity::all();
+        return view('admin.log', compact('log'));
     }
 }

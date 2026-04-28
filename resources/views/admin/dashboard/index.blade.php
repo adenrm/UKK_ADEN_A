@@ -15,7 +15,7 @@
 
         <div class="p-5 flex gap-5 bg-purple-600 rounded-md shadow-md mt-4 h-36">
             <div class="">
-                <img src="{{ asset('fotocontoh.jpg') }}" alt="" class="w-[100px] h-[100px] object-cover rounded-md">
+                {{-- <img src="{{ asset('fotocontoh.jpg') }}" alt="" class="w-[100px] h-[100px] object-cover rounded-md"> --}}
             </div>
             <div class="text-md font-medium">
                 Nama: <span class="text-white">{{ Auth::user()->name }}</span>
@@ -32,25 +32,25 @@
             <div class="bg-green-600 w-[25%] p-4 h-24 rounded-md shadow-md">
                 <h4 class="text-xl font-medium">Lunas</h4>
                 <h3 class="text-3xl font-bold text-white">
-                    {{ $lunas }}
+                    {{ $lunas }} <span class="text-sm text-white">Bulan</span>
                 </h3>
             </div>
             <div class="bg-yellow-600 w-[25%] p-4 h-24 rounded-md shadow-md">
                 <h4 class="text-xl font-medium">Belum Lunas</h4>
                 <h3 class="text-3xl font-bold text-white">
-                    {{ $belumLunas }}
+                    {{ $belumLunas }} <span class="text-sm text-white">Bulan</span>
                 </h3>
             </div>
             <div class="bg-red-600 w-[25%] p-4 h-24 rounded-md shadow-md">
                 <h4 class="text-xl font-medium">Belum Bayar</h4>
                 <h3 class="text-3xl font-bold text-white">
-                    {{ $belumBayar }}
+                    {{ $belumBayar }} <span class="text-sm text-white">Bulan</span>
                 </h3>
             </div>
             <div class="bg-blue-600 w-[25%] p-4 h-24 rounded-md shadow-md">
                 <h4 class="text-xl font-medium">Jumlah Siswa</h4>
                 <h3 class="text-3xl font-bold text-white">
-                    {{ $totalstudents }}
+                    {{ $totalstudents }} <span class="text-sm text-white">Orang</span>
                 </h3>
             </div>            
         </div>

@@ -16,13 +16,29 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    @if (Auth::user()->level === 'student')
+                        <x-nav-link href="{{ route('student.payment.index') }}" :active="request()->routeIs('student.payment.index')">
+                        {{ __('Riwayat Pembayaran') }}
+                    </x-nav-link>
+                    @endif
+
                     @if (Auth::user()->level === 'admin')
                         <x-nav-link href="{{ route('admin.management') }}" :active="request()->routeIs('admin.management')">
                         {{ __('Manajemen') }}
                     </x-nav-link>
 
-                        <x-nav-link href="{{ route('admin.ticket.index') }}" :active="request()->routeIs('admin.ticket.index')">
+                        {{-- <x-nav-link href="{{ route('admin.ticket.index') }}" :active="request()->routeIs('admin.ticket.index')">
                         {{ __('Tiket') }}
+                    </x-nav-link> --}}
+
+                        <x-nav-link href="{{ route('log') }}" :active="request()->routeIs('log')">
+                        {{ __('Log') }}
+                    </x-nav-link>
+                    @endif
+
+                    @if (Auth::user()->level === 'staff')
+                        <x-nav-link href="{{ route('bill.index') }}" :active="request()->routeIs('bill.index')">
+                        {{ __('Tagihan') }}
                     </x-nav-link>
                     @endif
                 </div>
@@ -108,9 +124,9 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            <x-dropdown-link href="{{ route('profile.show') }}">
+                            {{-- <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link> --}}
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\SppBulan;
 use App\Models\StudentSpp;
 use App\Services\SppPaymentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -17,7 +19,12 @@ class PaymentController extends Controller
         $this->paymentService = $paymentService;
     }
     
-    // Form pembayaran
+    public function index()
+    {
+        $payments = Payment::where('user_id', Auth::user()->id)->get();
+        return view('student.payment.index', compact('payments'));
+    }
+
     public function create($studentSppId)
     {
         $studentSpp = StudentSpp::with(['user.userData', 'spp'])->findOrFail($studentSppId);
@@ -44,7 +51,7 @@ class PaymentController extends Controller
                 return response()->json($result);
             }
             
-            return redirect()->route('admin.bill.index', $studentSppId)
+            return redirect()->route('bill.index', $studentSppId)
                 ->with('success', $result['message']);
                 
         } catch (\Exception $e) {

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('title', 'Manajemen Tagihan SPP')
 
@@ -7,10 +7,19 @@
     <div class="bg-white rounded-md p-5 shadow-md">
         <div class="flex justify-between items-center mb-5">
             <div class="">
-                <a href="{{ route('admin.management') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
-                       Kembali
-                   </a>
                <h3 class="text-2xl font-bold mt-5">Manajemen Tagihan SPP</h3>
+               @if(session('error'))
+    <div id="alert-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded fixed top-5 right-5 z-50 transition-opacity duration-500" role="alert">
+        <div class="flex justify-between items-center">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button onclick="this.parentElement.parentElement.style.display='none'" class="ml-4">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+@endif
             </div>
             <div class="flex gap-2 mt-10">
             </div>
@@ -73,7 +82,7 @@
                         </td>
                         <td class="py-3 px-4 text-center">
                             @if(!$studentSpp)
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Belum register SPP</span>
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">Belum register SPP</span>
                             @elseif($sisa <= 0)
                                 <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Lunas</span>
                             @else
@@ -85,7 +94,7 @@
                                 <a href="{{ route('payment.detail', $student->id) }}" class="text-blue-500 hover:text-blue-700 mr-2">
                                     Detail
                                 </a>
-                                <a href="{{ route('admin.payment.create', $student->id) }}" class="text-green-500 hover:text-green-700">
+                                <a href="{{ route('staff.payment.create', $student->id) }}" class="text-green-500 hover:text-green-700">
                                     Bayar
                                 </a>
                             @else

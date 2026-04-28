@@ -59,7 +59,7 @@
                             Aksi
                         </th>
                     </tr>
-                    @foreach ($students as $student)
+                    @forelse ($students as $student)
                     <tr class="odd:bg-white even:bg-slate-50 hover:bg-blue-50 transition-colors">
                             <th class="px-6 py-4">
                                 {{ $loop->iteration }}
@@ -93,7 +93,20 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                          @empty
+                        <tr>
+                            <td colspan="8" class="border border-slate-400 px-4 py-8 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <!-- Icon Kosong -->
+                                    <svg class="w-16 h-16 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <p class="text-gray-500 font-medium">Belum ada data tiket</p>
+                                    <p class="text-gray-400 text-sm mt-1">Tiket akan muncul di sini setelah ada yang membuat</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
                 </table>
             </div>
         </div>

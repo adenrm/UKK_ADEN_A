@@ -1,4 +1,4 @@
-@extends('layouts.siswa')
+@extends('layouts.app')
 
 @section('title', 'Riwayat Pembayaran SPP')
 
@@ -14,15 +14,14 @@
                     <th class="py-3 px-4 text-right">Nominal</th>
                     <th class="py-3 px-4 text-left">Metode</th>
                     <th class="py-3 px-4 text-left">Dibayar Oleh</th>
-                    <th class="py-3 px-4 text-left">Untuk Bulan</th>
                     <th class="py-3 px-4 text-left">Status</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($pembayaran as $item)
+                @forelse($payments as $item)
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="py-3 px-4">{{ \Carbon\Carbon::parse($item->tanggal_bayar)->format('d/m/Y H:i') }}</td>
-                    <td class="py-3 px-4 text-right">Rp {{ number_format($item->nominal_bayar, 0, ',', '.') }}</td>
+                    <td class="py-3 px-4">{{ \Carbon\Carbon::parse($item->tanggal_bayar)->format('d M Y H:i') }}</td>
+                    <td class="py-3 px-4 text-right">Rp{{ number_format($item->nominal_bayar, 0, ',', '.') }}</td>
                     <td class="py-3 px-4">
                         @if($item->metode_pembayaran == 'tunai')
                             💵 Tunai
@@ -33,15 +32,15 @@
                         @endif
                     </td>
                     <td class="py-3 px-4">{{ $item->dibayar_oleh }}</td>
+                   
                     <td class="py-3 px-4">
-                        @foreach($item->details as $detail)
-                            <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs m-1">
-                                {{ $detail->sppBulan->nama_bulan }} {{ $detail->sppBulan->tahun }}
-                            </span>
-                        @endforeach
-                    </td>
-                    <td class="py-3 px-4">
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">✓ Success</span>
+                        @if($item->status == 'success')
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Sukses</span>
+                        @elseif($item->status == 'failed')
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">Gagal</span>
+                        @else
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Pending</span>
+                        @endif
                     </td>
                 </tr>
                 @empty

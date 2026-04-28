@@ -14,16 +14,16 @@
                         <h3 class="text-4xl font-medium mt-5">Manajemen Petugas</h3>
                         <p class="text-lg">Daftar petugas yang terdaftar di sistem.</p>
                        @if(session('success'))
-    <div id="alert-success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded fixed top-5 right-5 z-50 transition-opacity duration-500" role="alert">
-        <div class="flex justify-between items-center">
-            <span class="block sm:inline">{{ session('success') }}</span>
-            <button onclick="this.parentElement.parentElement.style.display='none'" class="ml-4">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
+                    <div id="alert-success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded fixed top-5 right-5 z-50 transition-opacity duration-500" role="alert">
+                        <div class="flex justify-between items-center">
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                            <button onclick="this.parentElement.parentElement.style.display='none'" class="ml-4">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
 @endif
                     </div>
                     <div class="">
@@ -47,7 +47,7 @@
                             Aksi
                         </th>
                     </tr>
-                    @foreach ($staffs as $staff)
+                    @forelse ($staffs as $staff)
                     <tr class="odd:bg-white even:bg-slate-50 hover:bg-blue-50 transition-colors">
                             <th class="px-6 py-4">
                                 {{ $loop->iteration }}
@@ -69,7 +69,20 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                          @empty
+                        <tr>
+                            <td colspan="4" class="border border-slate-400 px-4 py-8 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <!-- Icon Kosong -->
+                                    <svg class="w-16 h-16 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <p class="text-gray-500 font-medium">Belum ada data tiket</p>
+                                    <p class="text-gray-400 text-sm mt-1">Tiket akan muncul di sini setelah ada yang membuat</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
                 </table>
             </div>
         </div>

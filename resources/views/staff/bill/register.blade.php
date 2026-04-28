@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('title', 'Register SPP')
 
@@ -6,8 +6,8 @@
 <div class="p-5">
     <div class="bg-white p-5 mx-auto justify-items-center rounded-lg shadow-xl w-full max-w-md">
         <h3 class="text-4xl font-medium mt-5">Register SPP</h3>
-        <p>Register SPP untuk {{ $student->name }}</p>  
-
+        <p>Register SPP untuk {{ $student->name }}</p>
+        
         <div class="mt-5">
             <form action="{{ route('bill.register.spp') }}" method="POST">
                 @csrf
@@ -19,12 +19,8 @@
                         <td>
                             <select name="spp_id" id="spp_id" class="w-full p-2 border border-gray-300 rounded-md" required>
                                 <option value="" selected disabled>Pilih SPP</option>
-                                @foreach ($spps as $item) 
-                                @if ($item->is_active === true)
+                                @foreach ($spps as $item)
                                     <option value="{{ $item->id }}">{{ $item->keterangan }}</option>
-                                    @else
-                                    <option value="{{ $item->id }}" disabled>{{ $item->keterangan }}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </td>

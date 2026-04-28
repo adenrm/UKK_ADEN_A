@@ -11,6 +11,7 @@ use App\Models\StudentSpp;
 use App\Models\User;
 use App\Services\SppPaymentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
@@ -30,10 +31,12 @@ class PaymentController extends Controller
     
     public function create($id)
     {
-        // $studentSpp = StudentSpp::with(['user.UserData', 'spp'])->findOrFail($student->id);
         $student = User::findOrFail($id);
         $studentSpp = StudentSpp::findOrFail($student->studentSpp->id);
-        return view('admin.bill.payment.create', compact('studentSpp'));
+        if (Auth::user()->level == 'admin') {
+            return view('admin.bill.payment.create', compact('studentSpp'));
+        }
+        return view('staff.payment.create', compact('studentSpp'));
     }
 
     public function detail($id)
@@ -41,7 +44,12 @@ class PaymentController extends Controller
         $studentSppId = StudentSpp::where('user_id', $id)->first();
         $SppBulanId = SppBulan::where('student_spp_id', $studentSppId->id)->first();
         $SppBulan = SppBulan::where('student_spp_id', $studentSppId->id)->get();
-        return view('admin.bill.payment.detail', compact('SppBulan'));
+        $sisaTabungan = 0;
+        $OverPayment = OverPayment::where('student_spp_id', $studentSppId->id)->first();
+        if ($OverPayment) {
+            $sisaTabungan = $OverPayment->nominal;
+        }
+        return view('admin.bill.payment.detail', compact('SppBulan', 'sisaTabungan', 'OverPayment'));
     }
 
     public function store(Request $request, $id)
@@ -55,16 +63,13 @@ class PaymentController extends Controller
         DB::beginTransaction();
         
         try {
-            // 1. Cari data StudentSpp berdasarkan ID
             $studentSpp = StudentSpp::with('user')->findOrFail($id);
             $student = $studentSpp->user;
             
-            // 2. Cek apakah ada data StudentSpp
             if (!$studentSpp) {
                 throw new \Exception('Data SPP tidak ditemukan.');
             }
             
-            // 3. Ambil bulan yang belum lunas
             $bulanBelumBayar = SppBulan::where('student_spp_id', $studentSpp->id)
                 ->whereIn('status', ['unpaid', 'partial'])
                 ->orderBy('tahun')
@@ -75,7 +80,6 @@ class PaymentController extends Controller
                 throw new \Exception('Semua tagihan sudah lunas!');
             }
             
-            // 4. Buat record pembayaran
             $pembayaran = Payment::create([
                 'user_id' => $student->id,
                 'student_spp_id' => $studentSpp->id,
@@ -88,7 +92,6 @@ class PaymentController extends Controller
                 'tanggal_bayar' => now()
             ]);
             
-            // 5. Alokasikan pembayaran ke bulan-bulan yang belum lunas
             $sisaBayar = $request->input('nominal_bayar'); 
             $bulanTerbayar = [];
             
@@ -98,14 +101,12 @@ class PaymentController extends Controller
                 $sisaTagihanBulan = $bulan->sisa_utang > 0 ? $bulan->sisa_utang : $bulan->nominal;
                 $nominalDibayar = min($sisaBayar, $sisaTagihanBulan);
                 
-                // Simpan detail pembayaran
                 PaymentDetail::create([
                     'payment_id' => $pembayaran->id,
                     'spp_bulan_id' => $bulan->id,
                     'nominal_dibayar' => $nominalDibayar
                 ]);
                 
-                // Update status bulan
                 $sisaSetelahBayar = $sisaTagihanBulan - $nominalDibayar;
                 
                 if ($sisaSetelahBayar <= 0) {
@@ -128,15 +129,12 @@ class PaymentController extends Controller
                 ];
             }
             
-            // 6. Update sisa pembayaran
             $pembayaran->sisa_tagihan = $sisaBayar;
             $pembayaran->save();
-            
-            // 7. Handle overpayment (kelebihan bayar)
             if ($sisaBayar > 0) {
                 OverPayment::create([
+                    'payment_id' => $pembayaran->id,
                     'student_spp_id' => $studentSpp->id,
-                    'pembayaran_id' => $pembayaran->id,
                     'nominal' => $sisaBayar,
                     'status' => 'deposit',
                     'nominal_terpakai' => 0
@@ -146,11 +144,9 @@ class PaymentController extends Controller
             DB::commit();
             
             $message = $this->generateSuccessMessage($bulanTerbayar, $sisaBayar);
-            
-            return redirect()
-                ->route('admin.bill.detail', $student->id)
-                ->with('success', $message);
-                
+                return redirect()
+                    ->route('bill.index', $student->id)
+                    ->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             

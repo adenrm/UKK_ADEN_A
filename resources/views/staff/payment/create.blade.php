@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('title', 'Form Pembayaran SPP')
 
@@ -39,11 +39,7 @@
                         <strong>SPP/Bulan:</strong> Rp {{ number_format($studentSpp->spp->nominal_per_bulan) }}
                     </div>
                     
-                    @if (Auth::user()->level === 'admin')
                     <form action="{{ route('payment.store', $studentSpp->id) }}" method="POST">
-                    @else
-                    <form action="{{ route('payment.store', $studentSpp->id) }}" method="POST">
-                                       @endif
                         @csrf
                         <table>
                             <tr>
@@ -52,7 +48,7 @@
                                 </td>
                                 <td>:</td>
                                 <td>    
-                                    <input type="number" placeholder="10.000" min="10000" id="nominal_bayar" name="nominal_bayar" class="w-full p-2 border border-gray-300 rounded-md" required>
+                                    <input type="number" name="nominal_bayar" class="w-full p-2 border border-gray-300 rounded-md" required>
                                     <small class="text-muted">Minimal Rp 10.000</small>
                                 </td>
                             </tr>
@@ -62,8 +58,7 @@
                                 </td>
                                 <td>:</td>
                                 <td>
-                                    <select name="metode_pembayaran"  class="w-full p-2 border border-gray-300 rounded-md" required>
-                                        <option value="" selected disabled  >Pilih Metode Pembayaran</option>
+                                    <select name="metode_pembayaran" class="w-full p-2 border border-gray-300 rounded-md" required>
                                         <option value="tunai">Tunai</option>
                                         <option value="transfer">Transfer Bank</option>
                                         <option value="qris">QRIS</option>
@@ -76,7 +71,7 @@
                                 </td>
                                 <td>:</td>
                                 <td>
-                                    <input type="text" placeholder="Nama Pembayar"  name="dibayar_oleh" class="w-full p-2 border border-gray-300 rounded-md" required>
+                                    <input type="text" name="dibayar_oleh" class="w-full p-2 border border-gray-300 rounded-md" required>
                                 </td>
                             </tr>
                             <tr>
@@ -85,20 +80,14 @@
                                 </td>
                                 <td>:</td>
                                 <td>
-                                    <textarea name="keterangan" placeholder="SPP 2 Bulan" class="w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea>
+                                    <textarea name="keterangan" class="w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea>
                                 </td>
                             </tr>
                             <tr >
                                 <td>
-                                    @if (Auth::user()->level === 'admin')
                                      <a href="{{ route('bill.index') }}"  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                                         Kembali
                                     </a>
-                                    @else
-                                    <a href="{{ route('bill.index') }}"  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
-                                        Kembali
-                                    </a>
-                                    @endif
                                 </td>
                                 <td class="text-right"  colspan="2">
                                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-black hover:text-white focus:text-white p-2 rounded-md">Bayar</button>

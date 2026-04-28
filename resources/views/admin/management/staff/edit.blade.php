@@ -33,7 +33,7 @@
                         <tr>
                             <td>
                                 <button type="submit" class="bg-green-600 hover:bg-green-700 text-black hover:text-white focus:text-white p-2 rounded-md">
-                                    Edit
+                                    Update
                                 </button>
                             </td>
                         </tr>

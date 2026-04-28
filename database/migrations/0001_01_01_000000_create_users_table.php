@@ -82,7 +82,7 @@ return new class extends Migration
             $table->integer('nis')->unique()->nullable()->length(8);
             $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
             $table->string('rayon')->nullable();
-            $table->integer('phone')->nullable()->length(20);
+            $table->string('phone')->nullable()->length(20);
             $table->enum('program', ['unggulan', 'reguler']);
             $table->timestamps();
         });

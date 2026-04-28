@@ -12,7 +12,7 @@ use App\Http\Controllers\user\PaymentController as StudentPaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware([
@@ -22,18 +22,40 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/payment/index', [StudentPaymentController::class, 'index'])->name('student.payment.index');
     Route::get('/bill', [SppController::class, 'billStudent'])->name('student.bill');
     Route::get('/payment', [StudentPaymentController::class, 'riwayatStudent'])->name('student.payment');
-    Route::post('/payment', [StudentPaymentController::class, 'storeStudent'])->name('student.payment.store');
 
     Route::get('/student/bill', [StudentSPPController::class, 'bill'])->name('student.bill');
     Route::post('/spp/generate-bill', [StudentSPPController::class, 'generatebill'])->name('spp.generate');
 
     Route::get('/payment/{studentSppId}/create', [StudentPaymentController::class, 'create'])->name('payment.create');
-    Route::post('/payment/{studentSppId}', [StudentPaymentController::class, 'store'])->name('payment.store');
     Route::get('/payment/{studentSppId}/riwayat', [StudentPaymentController::class, 'riwayat'])->name('payment.riwayat');
 
-    Route::middleware('admin')->group(function () {
+   
+
+    
+
+    Route::middleware('creator')->group(function () {
+        Route::get('/bill', [BillController::class, 'index'])->name('bill.index');
+        Route::get('/bill/payment/{id}', [PaymentController::class, 'create'])->name('payment.create');
+        Route::get('/bill/register/{id}', [BillController::class, 'register'])->name('bill.register');
+        Route::post('/bill/register/spp', [BillController::class, 'registerSpp'])->name('bill.register.spp');
+        Route::get('/bill/{user}', [BillController::class, 'detail'])->name('bill.detail');
+        Route::get('/bill/payment/{id}/detail', [PaymentController::class, 'detail'])->name('payment.detail');
+        Route::post('/payment/{id}', [PaymentController::class, 'store'])->name('payment.store');
+        Route::get('/bill/register/{id}', [BillController::class, 'register'])->name('staff.bill.register');
+
+
+        Route::get('/log', [DashboardController::class, 'log'])->name('log');
+
+
+    });
+});
+
+
+ Route::middleware('auth:sanctum',  config('jetstream.auth_session'),
+    'verified','admin',)->group(function () {
         Route::get('/management', [DashboardController::class, 'management'])->name('admin.management');
 
 
@@ -60,26 +82,32 @@ Route::middleware([
         Route::patch('/management/spp/{spp}/update-status', [SPPController::class, 'updateStatus'])->name('admin.spp.updateStatus');
 
          // bill
-        Route::get('/bill', [BillController::class, 'index'])->name('admin.bill.index');
-        Route::get('/bill/{user}', [BillController::class, 'detail'])->name('admin.bill.detail');
         Route::post('/bill/generate', [BillController::class, 'generateBill'])->name('admin.bill.generate');
         Route::post('/bill/generate-massal', [BillController::class, 'generateMassal'])->name('admin.bill.generate.massal');
-        Route::get('/bill/register/{id}', [BillController::class, 'register'])->name('admin.bill.register');
+        // Route::get('/bill/register/{id}', [BillController::class, 'register'])->name('admin.bill.register');
         Route::get('/bill/generate/index', [BillController::class, 'generate'])->name('admin.bill.generate.index');
 
-        Route::post('/bill/register/spp', [BillController::class, 'registerSpp'])->name('admin.bill.register.spp');
         Route::get('/payment', [PaymentController::class, 'index'])->name('admin.payment.index');
 
         Route::get('/bill/payment/{id}', [PaymentController::class, 'create'])->name('admin.payment.create');
-        Route::get('/bill/payment/{id}/detail', [PaymentController::class, 'detail'])->name('admin.payment.detail');
-        Route::post('/payment/{id}', [PaymentController::class, 'store'])->name('admin.payment.store');
         
         // payment
-        // Route::get('/payment/create/{studentSppId}', [BillController::class, 'createPayment'])->name('admin.payment.create');
+        Route::get('/payment/create/{studentSppId}', [BillController::class, 'createPayment'])->name('admin.payment.create');
         Route::post('/payment/bulan', [PaymentController::class, 'bayarPerBulan'])->name('admin.payment.bulan');
 
 
         Route::get('/tickets', [TicketController::class, 'index'])->name('admin.ticket.index');
         Route::post('/tickets/update-status/{id}', [TicketController::class, 'updateStatus'])->name('admin.ticket.updateStatus');
     });
-});
+
+
+    Route::middleware('auth:sanctum',  config('jetstream.auth_session'),
+    'verified','staff')->group(function () {
+        Route::post('/bill/generate', [BillController::class, 'generateBill'])->name('staff.bill.generate');
+        // Route::get('/bill/register/{id}', [BillController::class, 'register'])->name('staff.bill.register');
+
+        Route::get('/bill/payment/{id}', [PaymentController::class, 'create'])->name('staff.payment.create');
+
+
+
+    });

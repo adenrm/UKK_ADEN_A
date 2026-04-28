@@ -17,7 +17,7 @@
                 
                 <h1 class="text-2xl font-medium">SPP</h1>
             </a>
-            <a href="{{ route('admin.bill.index') }}" class="bg-white rounded-md p-5 flex gap-5 shadow-md">
+            <a href="{{ route('bill.index') }}" class="bg-white rounded-md p-5 flex gap-5 shadow-md">
                 <h1 class="text-2xl font-medium">Tagihan</h1>
             </a>
              <a href="{{ route('admin.payment.index') }}" class="bg-white rounded-md p-5 flex gap-5 shadow-md">
