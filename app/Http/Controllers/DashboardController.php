@@ -36,7 +36,7 @@ class DashboardController extends Controller
 
     public function log()
     {
-        $log = Activity::all();
+        $log = Activity::orderBy('created_at', 'desc')->get();
         return view('admin.log', compact('log'));
     }
 }
